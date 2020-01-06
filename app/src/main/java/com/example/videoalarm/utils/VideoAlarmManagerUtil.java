@@ -1,7 +1,7 @@
 package com.example.videoalarm.utils;
 
-// Created by Sim on 2019-09-17.
-//알람데이터를 관리하는 클래스를 작성한다
+// Created by
+// 알람데이터를 관리하는 클래스를 작성한다
 
 import com.example.videoalarm.models.Alarm;
 
@@ -18,12 +18,6 @@ public class VideoAlarmManagerUtil {
 
     // Parameters
     private ArrayList<Alarm> listAlarm = null;
-
-    //Test variable
-    private String testInsertString = "in:";
-    private String testUpdateString = "";
-    private String testDeleteString = "";
-
 
     //--------------------------------------------------------------------------------------------//
     //

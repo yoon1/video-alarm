@@ -10,17 +10,24 @@ public class Alarm {
     //Parameters, don't reference parameters directly, use setter and getter
     private int id = -1;
     private boolean enable = true; // 1 : true, 0 : false
-    private String alarmDate = "";  //YYYYMMDD
-    private String alarmTime = "";  //hhmmss
-    private String alarmNote = "";  // 알람내용
+    private String alarmDate = "20200101";  //YYYYMMDD
+    private String alarmTime = "000000";  //hhmmss
+    private String alarmNote = "Test";  // 알람내용
     private int videoId = 1;        // 비디오이름
-    private String videoName = "";  // 비디오명
+    private String videoName = "video";  // 비디오명
 
     //--------------------------------------------------------------------------------------------//
     // Constructor
     //--------------------------------------------------------------------------------------------//
 
     public Alarm() {
+        int id = -1;
+        boolean enable = true; // 1 : true, 0 : false
+        String alarmDate = "20200101";  //YYYYMMDD
+        String alarmTime = "000000";  //hhmmss
+        String alarmNote = "Test";  // 알람내용
+        int videoId = 1;        // 비디오이름
+        String videoName = "video";  // 비디오명
     }
 
     public Alarm(int id, boolean enable, String alarmDate, String alarmTime, String alarmNote, int videoId, String videoName) {
