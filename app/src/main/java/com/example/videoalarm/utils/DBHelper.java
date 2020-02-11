@@ -18,15 +18,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 "enable text, " +
                 "alarmDate text, " +
                 "alarmTime text, " +
-                "videoId int, " +
-                "videoName text, " +
-                "dayCircle int);";
+                "alarmNote text, " +
+                "videoId text, " +
+                "videoName text);";
         db.execSQL(sqlStudent);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String sqlStudent = "drop table if exists "+ Defines.ALARM +";";
+        String sqlStudent = "drop table if exists " + Defines.ALARM + ";";
         db.execSQL(sqlStudent);
         onCreate(db);
     }

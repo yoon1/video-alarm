@@ -44,7 +44,7 @@ public class SqlLiteUtil {
                 context,
                 Defines.DATABASE_NAME,
                 null,
-                5);
+                6);
         try {
             sqLiteDatabase = helper.getWritableDatabase();
         } catch (SQLiteException e) {
@@ -54,7 +54,7 @@ public class SqlLiteUtil {
     }
 
     //--------------------------------------------------------------------------------------------//
-    // insert
+    // Alarm insert
     //--------------------------------------------------------------------------------------------//
     public void insert(Alarm alarm) {
         ContentValues values = new ContentValues();
@@ -65,6 +65,7 @@ public class SqlLiteUtil {
             values.put("alarmTime", alarm.getAlarmTime());
             values.put("alarmNote", alarm.getAlarmNote());
             values.put("videoId", alarm.getVideoId());
+            //values.put("videoName", alarm.getVideoName());
             values.put("videoName", alarm.getVideoName());
         }
 
@@ -77,6 +78,39 @@ public class SqlLiteUtil {
             MyDebug.log(tableName+" : " + result + "_ row insert FAILURE.");
         }
     }
+
+    //--------------------------------------------------------------------------------------------//
+    // Alarm update
+    //--------------------------------------------------------------------------------------------//
+    public void update(Alarm alarm) {
+        ContentValues values = new ContentValues();
+        int id = alarm.getId();
+        // 키,값의 쌍으로 데이터 입력
+        if(tableName.equals(Defines.ALARM)) {
+            //values.put("enable", alarm.getEnable());
+            values.put("alarmDate", alarm.getAlarmDate());
+            values.put("alarmTime", alarm.getAlarmTime());
+            values.put("alarmNote", alarm.getAlarmNote());
+            values.put("videoId", alarm.getVideoId());
+            values.put("videoName", alarm.getVideoName());
+            //values.put("videoName", "video");
+        }
+
+        MyDebug.log("SQLITE ID : " +  alarm.getId());
+        MyDebug.log("SQLITE DATE : " +  alarm.getAlarmDate());
+        MyDebug.log("SQLITE TIEM : " +  alarm.getAlarmTime());
+        MyDebug.log("SQLITE NOTE : " +  alarm.getAlarmNote());
+        MyDebug.log("SQLITE VIDEOID: " +  alarm.getVideoId());
+        MyDebug.log("SQLITE VIODEO NAME: " +  alarm.getVideoName());
+
+        int result = sqLiteDatabase.update(tableName, // tableName
+                values,    // 뭐라고 변경할지 ContentValues 설정
+                "_id=" +id, // 바꿀 항목을 찾을 조건절
+                null);// 바꿀 항목으로 찾을 값 String 배열
+
+        MyDebug.log(tableName + "UPDATE :: " + result + "번째 row update 성공했음");
+    }
+
 
     //--------------------------------------------------------------------------------------------//
     //
@@ -108,7 +142,7 @@ public class SqlLiteUtil {
                     tAlarm.setAlarmDate(c.getString(c.getColumnIndex("alarmDate")));
                     tAlarm.setAlarmTime(c.getString(c.getColumnIndex("alarmTime")));
                     tAlarm.setAlarmNote(c.getString(c.getColumnIndex("alarmNote")));
-                    tAlarm.setVideoId(c.getInt(c.getColumnIndex("videoId")));
+                    tAlarm.setVideoId(c.getString(c.getColumnIndex("videoId")));
                     tAlarm.setVideoName(c.getString(c.getColumnIndex("videoName")));
                     container.add(tAlarm);
                     MyDebug.log(tableName + " : SELECT SUCCESS" );
@@ -125,24 +159,32 @@ public class SqlLiteUtil {
     //
     //--------------------------------------------------------------------------------------------//
     public boolean selectEnable (int id) {
+        MyDebug.log("SELECT ENABLE : ");
         Cursor c = sqLiteDatabase.query(tableName, null, "_id=?", new String[]{String.valueOf(id)}, null, null, null);
         // sqlLiteDatabase = getReadableDatabase
+        if ( c != null) MyDebug.log("NOT NULL");
+        else MyDebug.log("NULL");
         Alarm tAlarm = new Alarm();
+        c.moveToFirst();
+        MyDebug.log("VIDEO ID : " + c.getString(c.getColumnIndex("videoId")));
+        MyDebug.log("ENABLE ID : " + (c.getInt(c.getColumnIndex("enable")) == 1));
         tAlarm.setEnable((c.getInt(c.getColumnIndex("enable")) == 1));
         MyDebug.log("변경전 : " + tAlarm.getEnable());
         return tAlarm.isEnable();
     }
 
+    //--------------------------------------------------------------------------------------------//
+    // update Enable
+    //--------------------------------------------------------------------------------------------//
     public void updateEnable(int id) {
         ContentValues values = new ContentValues();
-        boolean enable = (selectEnable(id)?false:true);
-        MyDebug.log("변경후: " + enable);
+        boolean enable = selectEnable(id)?false:true;
+        MyDebug.log("변경후 ENABLE : " + enable);
         values.put("enable", enable);
         int result = sqLiteDatabase.update(tableName, // tableName
                 values,    // 뭐라고 변경할지 ContentValues 설정
-                "id=" +id, // 바꿀 항목을 찾을 조건절
+                "_id=" +id, // 바꿀 항목을 찾을 조건절
                 null);// 바꿀 항목으로 찾을 값 String 배열
         MyDebug.log(tableName + " updateEnable" + result + "번째 row update 성공했음");
     }
-
 }

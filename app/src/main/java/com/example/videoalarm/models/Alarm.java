@@ -13,7 +13,7 @@ public class Alarm {
     private String alarmDate = "20200101";  //YYYYMMDD
     private String alarmTime = "000000";  //hhmmss
     private String alarmNote = "Test";  // 알람내용
-    private int videoId = 1;        // 비디오이름
+    private String videoId = "M2oWpFm2yV8"; // 비디오ID
     private String videoName = "video";  // 비디오명
 
     //--------------------------------------------------------------------------------------------//
@@ -26,11 +26,11 @@ public class Alarm {
         String alarmDate = "20200101";  //YYYYMMDD
         String alarmTime = "000000";  //hhmmss
         String alarmNote = "Test";  // 알람내용
-        int videoId = 1;        // 비디오이름
+        String videoId = "M2oWpFm2yV8"; // 비디오이름
         String videoName = "video";  // 비디오명
     }
 
-    public Alarm(int id, boolean enable, String alarmDate, String alarmTime, String alarmNote, int videoId, String videoName) {
+    public Alarm(int id, boolean enable, String alarmDate, String alarmTime, String alarmNote, String videoId, String videoName) {
         this.id = id;
         this.enable = enable;
         this.alarmDate = alarmDate;
@@ -70,9 +70,7 @@ public class Alarm {
         return alarmDate;
     }
 
-    public void setAlarmDate(String alarmDate) {
-        this.alarmDate = alarmDate;
-    }
+    public void setAlarmDate(String alarmDate) { this.alarmDate = alarmDate; }
 
     public String getAlarmTime() {
         return alarmTime;
@@ -90,11 +88,11 @@ public class Alarm {
         this.alarmNote = alarmNote;
     }
 
-    public int getVideoId() {
+    public String getVideoId() {
         return videoId;
     }
 
-    public void setVideoId(int videoId) {
+    public void setVideoId(String videoId) {
         this.videoId = videoId;
     }
 

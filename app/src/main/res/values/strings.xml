@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">videoAlarm</string>
+    <string name="ok">O</string>
+    <string name="cancle">X</string>
 </resources>
