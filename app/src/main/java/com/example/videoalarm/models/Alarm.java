@@ -40,10 +40,10 @@ public class Alarm {
         this.videoName = videoName;
     }
 
+
     //--------------------------------------------------------------------------------------------//
     // getter / setter
     //--------------------------------------------------------------------------------------------//
-
     public int getId() {
         return id;
     }
@@ -100,7 +100,5 @@ public class Alarm {
         return videoName;
     }
 
-    public void setVideoName(String videoName) {
-        this.videoName = videoName;
-    }
+    public void setVideoName(String videoName) {    this.videoName = videoName;    }
 }

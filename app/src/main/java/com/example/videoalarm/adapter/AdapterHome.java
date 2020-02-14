@@ -1,5 +1,6 @@
 package com.example.videoalarm.adapter;
 
+import android.app.AlarmManager;
 import android.content.Context;
 import android.media.Image;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.example.videoalarm.fragment.HomeFragment;
 import com.example.videoalarm.fragment.SearchFragment;
 import com.example.videoalarm.models.Alarm;
 import com.example.videoalarm.utils.MyDebug;
+import com.example.videoalarm.utils.VideoAlarmManagerUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -35,6 +37,7 @@ import static android.content.ContentValues.TAG;
 public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Alarm> alarmList;
+    private AlarmManager alarmManager;
 
     HomeFragment fragment;
 
@@ -42,6 +45,9 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.context = context;
         this.alarmList = alarmList;
         this.fragment = fragment;
+
+        alarmManager = (AlarmManager)context.getSystemService(context.ALARM_SERVICE);
+
     }
 
     class HomeHolder extends RecyclerView.ViewHolder {
@@ -106,13 +112,14 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         //isActiva = "0";
                         Toast.makeText(context, " false => true", Toast.LENGTH_SHORT).show();
                         MyDebug.log("ACTION_DOWN: getAlarmId + " + getAlarmId);
-                        fragment.updateEnable(getAlarmId);
+                        VideoAlarmManagerUtil.getInstance().UpdateAlarmEnable(getAlarmId);
                         enableButton.setChecked(true);
                     } else {
                         // isActiva = "1";
                         Toast.makeText(context, " true => false ", Toast.LENGTH_SHORT).show();
                         MyDebug.log("ACTION_UP: getAlarmId + " + getAlarmId );
-                        fragment.updateEnable(getAlarmId);
+                        //fragment.updateEnable(getAlarmId);
+                        VideoAlarmManagerUtil.getInstance().UpdateAlarmEnable(getAlarmId);
                         Log.d("ontouchEvent", "enableid.isChecked() : " + enableButton.isChecked());
                         enableButton.setChecked(false);
                     }

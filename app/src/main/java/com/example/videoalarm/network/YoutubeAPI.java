@@ -13,11 +13,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Url;
 
 public class YoutubeAPI {
-    Context context;
+    public static Context context;
     public static final String BASE_URL = "https://www.googleapis.com/youtube/v3/";
-
-    public final String KEY = context.getResources().getString(R.string.api_key);
-
+    public static final String KEY = context.getResources().getString(R.string.api_key);
     public static final String maxResults = "&maxResults=10";
     public static final String part = "&part=snippet";
     public static final String order = "&order=date";

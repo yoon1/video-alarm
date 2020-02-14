@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import com.example.videoalarm.utils.MyDebug;
 import com.example.videoalarm.utils.SqlLiteUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Calendar;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -29,11 +32,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-    /*
-    private AlarmManager alarmManager;
-    private PendingIntent alarmIntent;
 
-     */
+    private AlarmManager alarmManager;
+    //private PendingIntent alarmIntent;
+    private PendingIntent alarmIntent;
 
     private HomeFragment homeFragment = new HomeFragment();
     private HomeAddFragment homeAddFragment = new HomeAddFragment();
@@ -50,12 +52,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initDatabase();
 
-        menuBottom = findViewById(R.id.menu_bottom);
+        //menuBottom = findViewById(R.id.menu_bottom);
 
         setFragment(null, homeFragment);
 
-        menuBottom.setSelectedItemId(R.id.home);
-        menuBottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        /* alarm SETTING START */
+        alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, AlarmReceiver.class);
+
+        alarmIntent = PendingIntent.getBroadcast(this, 100, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, 5);
+        /* cal.set(Calendar.HOUR_OF_DAY, 22);
+        cal.set(Calendar.MINUTE,48);
+        cal.set(Calendar.SECOND,8); */
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),alarmIntent);
+        }
+        /* alarm SETTING END */
+
+        //menuBottom.setSelectedItemId(R.id.home);
+        /* menuBottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if(menuItem.isChecked()) {
@@ -86,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        }); */
     }
 
     // Fragment전환
@@ -124,3 +143,4 @@ public class MainActivity extends AppCompatActivity {
         SqlLiteUtil.getInstance().setInitView(getApplicationContext(), "ALARM");
     }
 }
+

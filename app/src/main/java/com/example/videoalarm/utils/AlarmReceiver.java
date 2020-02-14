@@ -16,20 +16,25 @@ import com.example.videoalarm.activity.YoutubeActivity;
 import static android.app.NotificationManager.IMPORTANCE_DEFAULT;
 
 public class AlarmReceiver extends BroadcastReceiver {
+
+    Context context;
+
     private static final String CHANNEL_ID = "com.example.videoalarm.view.channelId";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent notificationIntent = new Intent(context, YoutubeActivity.class);
+        this.context = context;
+
+        //String id = intent.getExtras().getString("id");
+        //Intent notificationIntent = new Intent(context, YoutubeActivity.class);
+        Intent notificationIntent = new Intent(context, VideoPlayingService.class);
+        //notificationIntent.putExtra().getString("id");
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(YoutubeActivity.class);
         stackBuilder.addNextIntent(notificationIntent);
-
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
         Notification.Builder builder = new Notification.Builder(context);
-
         Notification notification = builder.setContentTitle("Demo App Notification")
                 .setContentText("New Notification From Demo App..")
                 .setTicker("New Message Alert!")
@@ -48,9 +53,11 @@ public class AlarmReceiver extends BroadcastReceiver {
                     "NotificationDemo",
                     IMPORTANCE_DEFAULT
             );
-            notificationManager.createNotificationChannel(channel);
+            //notificationManager.createNotificationChannel(channel);
+            this.context.startForegroundService(notificationIntent);
         }
+        //notificationManager.notify(0, notification);
+        this.context.startService(notificationIntent);
 
-        notificationManager.notify(0, notification);
     }
 }

@@ -156,7 +156,29 @@ public class SqlLiteUtil {
     }
 
     //--------------------------------------------------------------------------------------------//
-    //
+    // Alarm 반환.
+    //--------------------------------------------------------------------------------------------//
+    public Alarm selectAlarm (int id) {
+        MyDebug.log("SELECT ENABLE : ");
+        Cursor c = sqLiteDatabase.query(tableName, null, "_id=?", new String[]{String.valueOf(id)}, null, null, null);
+        // sqlLiteDatabase = getReadableDatabase
+        if ( c != null) MyDebug.log("NOT NULL");
+        else MyDebug.log("NULL");
+        Alarm tAlarm = new Alarm();
+        c.moveToFirst();
+        tAlarm.setEnable((c.getInt(c.getColumnIndex("enable")) == 1));
+        tAlarm.setId(c.getInt(c.getColumnIndex("_id")));
+        tAlarm.setEnable((c.getInt(c.getColumnIndex("enable")) == 1));
+        tAlarm.setAlarmDate(c.getString(c.getColumnIndex("alarmDate")));
+        tAlarm.setAlarmTime(c.getString(c.getColumnIndex("alarmTime")));
+        tAlarm.setAlarmNote(c.getString(c.getColumnIndex("alarmNote")));
+        tAlarm.setVideoId(c.getString(c.getColumnIndex("videoId")));
+        tAlarm.setVideoName(c.getString(c.getColumnIndex("videoName")));
+        return tAlarm;
+    }
+
+    //--------------------------------------------------------------------------------------------//
+    // select Enable
     //--------------------------------------------------------------------------------------------//
     public boolean selectEnable (int id) {
         MyDebug.log("SELECT ENABLE : ");

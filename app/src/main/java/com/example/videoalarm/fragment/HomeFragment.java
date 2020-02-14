@@ -18,6 +18,7 @@ import com.example.videoalarm.utils.SqlLiteUtil;
 import com.example.videoalarm.utils.SwipeController;
 import com.example.videoalarm.utils.SwipeControllerActions;
 import com.example.videoalarm.utils.VideoAlarmManagerUtil;
+import com.example.videoalarm.utils.VideoPlayingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,13 +178,7 @@ public class HomeFragment extends Fragment {
         MyDebug.log("전달 getAlarmNote : " +  alarm.getAlarmNote());
         MyDebug.log("전달 getVideoId : " +  alarm.getVideoId());
         MyDebug.log("======DELETE END ======");
-        SqlLiteUtil.getInstance().delete(alarm.getId());
-    }
-
-    //--------------------------------------------------------------------------------------------//
-    // DB : update enable
-    //--------------------------------------------------------------------------------------------//
-    public void updateEnable(int alarmId) {
-        SqlLiteUtil.getInstance().updateEnable(alarmId);
+        //DB : SqlLiteUtil.getInstance().delete(alarm.getId());
+        VideoAlarmManagerUtil.getInstance().DeleteAlarm(alarm.getId());
     }
 }

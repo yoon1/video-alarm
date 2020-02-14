@@ -3,11 +3,13 @@ package com.example.videoalarm.utils;
 // Created by
 // 알람데이터를 관리하는 클래스를 작성한다
 
+import android.app.AlarmManager;
+import android.content.Intent;
+
 import com.example.videoalarm.models.Alarm;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class VideoAlarmManagerUtil {
     //--------------------------------------------------------------------------------------------//
@@ -18,11 +20,13 @@ public class VideoAlarmManagerUtil {
 
     // Parameters
     private ArrayList<Alarm> listAlarm = null;
+    // alarmManager 추가.
+    // private AlarmManager[] alarmManagers = new AlarmManager[5]; // size어떻게 잡지? 맨날 바뀌나..?
+    private ArrayList<AlarmManager> alarmManagers = null;
 
     //--------------------------------------------------------------------------------------------//
-    //
+    // 싱글톤 객체를 얻기위한 함수
     //--------------------------------------------------------------------------------------------//
-    //싱글톤 객체를 얻기위한 함수
     public static VideoAlarmManagerUtil getInstance() {
         if (instance == null)
             instance = new VideoAlarmManagerUtil();
@@ -30,20 +34,27 @@ public class VideoAlarmManagerUtil {
     }
 
     //--------------------------------------------------------------------------------------------//
-    //
+    // 생성자.
     //--------------------------------------------------------------------------------------------//
-    //생성자
     public VideoAlarmManagerUtil() {
         //TODO make init
         listAlarm = new ArrayList<>();
+        alarmManagers = new ArrayList<>();
     }
 
     //--------------------------------------------------------------------------------------------//
-    //
+    // get AlarmList
     //--------------------------------------------------------------------------------------------//
     public ArrayList<Alarm> GetAlarmList() {
         //TODO make function
         return listAlarm;
+    }
+
+    //--------------------------------------------------------------------------------------------//
+    // get AlarmManagerList
+    //--------------------------------------------------------------------------------------------//
+    public ArrayList<AlarmManager> GetAlarmManagerList() {
+        return alarmManagers;
     }
 
     //--------------------------------------------------------------------------------------------//
@@ -64,20 +75,17 @@ public class VideoAlarmManagerUtil {
     //--------------------------------------------------------------------------------------------//
     //
     //--------------------------------------------------------------------------------------------//
-    //TODO make method
-    //Good luck !
-    public boolean AddAlarm(Alarm alarm) {
-        SqlLiteUtil.getInstance().insert(alarm);
+    public boolean SetAlarmList() {
+        //TODO make function
+        listAlarm = SqlLiteUtil.getInstance().viewAlarmList();
+        if(listAlarm == null) return false;
         return true;
     }
 
     //--------------------------------------------------------------------------------------------//
     //
     //--------------------------------------------------------------------------------------------//
-    public boolean SetAlarmList() {
-        //TODO make function
-        listAlarm = SqlLiteUtil.getInstance().viewAlarmList();
-        if(listAlarm == null) return false;
+    public boolean SetAlarmManagerList() {
         return true;
     }
 
@@ -89,45 +97,41 @@ public class VideoAlarmManagerUtil {
         return true;
     }
 
+
+
     //--------------------------------------------------------------------------------------------//
-    //
+    // Insert Alarm
     //--------------------------------------------------------------------------------------------//
-    public boolean SetAlarmEnable(int alarmId) {
-        SqlLiteUtil.getInstance().updateEnable(alarmId); // need update function
+    //TODO make method
+    //Good luck !
+    public boolean AddAlarm(Alarm alarm) {
+        SqlLiteUtil.getInstance().insert(alarm);
+        listAlarm.add(alarm);
         return true;
     }
+
+
 
     //--------------------------------------------------------------------------------------------//
     //
     //--------------------------------------------------------------------------------------------//
-    public boolean DeleteAlarm(List<Integer> id) { /* delete alarm - ui */
+    /* public boolean DeleteAlarm(List<Integer> id) {
+        ///delete alarm - ui
         for (int i = 0; i < id.size(); i++) {
             SqlLiteUtil.getInstance().delete(id.get(i));
         }
         return true;
-    }
+    } */
+
 
     //--------------------------------------------------------------------------------------------//
-    //
+    // Update Alarm
     //--------------------------------------------------------------------------------------------//
-    public boolean DeleteAlarm(String deleteText) { /* delete alarm - msg */
-        if(CheckDeleteRegexp(deleteText)){
-            String[] splitDeleteText = SplitText(deleteText);
-            DeleteAlarm(splitDeleteText[1]);
-        }
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------------//
-    // +++ 수정필요 : 보수작업이 필요/ 귀찮으니깐 쫌만 이따 ㅠ +++
-    //--------------------------------------------------------------------------------------------//
-    public boolean AddAlarm(String insertText) { /* add alarm - msg */
-        if(CheckInsertRegexp(insertText)) {
-            String[] splitInsertText = SplitText(insertText);
-            //Alarm alarm = new Alarm(splitInsertText[0], splitInsertText[1], splitInsertText[2]);
-            // SqlLiteUtil.getInstance().insert(alarm);
-        } else {
-            return false;
+    public boolean UpdateAlarm(Alarm alarm) {
+        SqlLiteUtil.getInstance().update(alarm);
+        for ( Alarm tAlarm : listAlarm) {
+            if ( tAlarm.getId() == alarm.getId())
+                tAlarm = alarm;
         }
         return true;
     }
@@ -135,40 +139,24 @@ public class VideoAlarmManagerUtil {
     //--------------------------------------------------------------------------------------------//
     //
     //--------------------------------------------------------------------------------------------//
-    public boolean CheckInsertRegexp(String text) { /* insert regexp check */
-        if (Pattern.matches("^in:.{1,80}:([1-9]|[01][0-9]|2[0-3])([0-5][0-9])([0-5][0-9]):[0-1]{7}$", text)) {
-            return true;
+    public boolean UpdateAlarmEnable(int alarmId) {
+        SqlLiteUtil.getInstance().updateEnable(alarmId); // need update function
+        for ( Alarm alarm : listAlarm) {
+            if ( alarm.getId() == alarmId)
+                alarm.setEnable( alarm.getEnable() == 1 ? false : true);
         }
-        return false;
+        return true;
     }
 
     //--------------------------------------------------------------------------------------------//
-    //
+    // Update Alarm
     //--------------------------------------------------------------------------------------------//
-    public boolean CheckDeleteRegexp(String text) { /* delete regexp check */
-        if (Pattern.matches("^in:.{1,80}$", text)) {
-            return true;
+    public boolean DeleteAlarm(int alarmId) {
+        SqlLiteUtil.getInstance().delete(alarmId);
+        for ( Alarm tAlarm : listAlarm) {
+            if ( tAlarm.getId() == alarmId)
+                listAlarm.remove(tAlarm);
         }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------------//
-    //
-    //--------------------------------------------------------------------------------------------//
-    public String CheckRegexp(String text) { /* search */
-        if (text.contains("in:")) {
-            return "in";
-        } else if (text.contains("de:")) {
-            return "de";
-        }
-        return null;
-    }
-
-    //--------------------------------------------------------------------------------------------//
-    //
-    //--------------------------------------------------------------------------------------------//
-    public String[] SplitText(String text) { /* split */
-        String[] splitText = text.split("\\s*\\r?\\n\\s*");
-        return splitText;
+        return true;
     }
 }

@@ -21,6 +21,7 @@ import com.example.videoalarm.dialog.TimeDialogFragment;
 import com.example.videoalarm.models.Alarm;
 import com.example.videoalarm.utils.MyDebug;
 import com.example.videoalarm.utils.SqlLiteUtil;
+import com.example.videoalarm.utils.VideoAlarmManagerUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -176,10 +177,12 @@ public class HomeAddFragment extends Fragment{
 
         //alarm.setAlarmNote("ok?");
         if ( getArguments().getString("alarmId") != null && !getArguments().getString("alarmId").isEmpty()) {
-            update(alarm);
+            // DB : update(alarm);
+            VideoAlarmManagerUtil.getInstance().UpdateAlarm(alarm);
             MyDebug.log("# UPDATE : HOMEADDFRAGMENT ");
         } else {
-            insert(alarm);
+            // DB : insert(alarm);
+            VideoAlarmManagerUtil.getInstance().AddAlarm(alarm);
             MyDebug.log("# INSERT : HOMEADDFRAGMENT ");
             //onDestroyView();
         }
@@ -240,16 +243,18 @@ public class HomeAddFragment extends Fragment{
     //--------------------------------------------------------------------------------------------//
     // DB : insert Alarm
     //--------------------------------------------------------------------------------------------//
-    private void insert(Alarm alarm) {
+/*   private void insert(Alarm alarm) {
         SqlLiteUtil.getInstance().insert(alarm);
     }
+ */
 
     //--------------------------------------------------------------------------------------------//
     // DB : update Alarm
     //--------------------------------------------------------------------------------------------//
-    private void update(Alarm alarm) {
+/*     private void update(Alarm alarm) {
         SqlLiteUtil.getInstance().update(alarm);
     }
+ */
     //--------------------------------------------------------------------------------------------//
     // setting된 Alarm 반환 - 이부분은 다시 고쳐야됌.
     //--------------------------------------------------------------------------------------------//
