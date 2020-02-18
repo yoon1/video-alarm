@@ -1,6 +1,5 @@
 package com.example.videoalarm.adapter;
 
-import android.app.AlarmManager;
 import android.content.Context;
 import android.media.Image;
 import android.util.Log;
@@ -37,7 +36,6 @@ import static android.content.ContentValues.TAG;
 public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Alarm> alarmList;
-    private AlarmManager alarmManager;
 
     HomeFragment fragment;
 
@@ -45,9 +43,6 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.context = context;
         this.alarmList = alarmList;
         this.fragment = fragment;
-
-        alarmManager = (AlarmManager)context.getSystemService(context.ALARM_SERVICE);
-
     }
 
     class HomeHolder extends RecyclerView.ViewHolder {
@@ -67,11 +62,11 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         public void setData(final Alarm alarm) {
-            final Alarm curAlarm = alarm;
+            MyDebug.log("AdapterHome setData.");
+            //final Alarm curAlarm = alarm;
             final String getContent = (String) alarm.getAlarmNote();
             final String getDateAndTime = (String) alarm.getAlarmDate() + " " + alarm.getAlarmTime();
             final int getAlarmId = alarm.getId();
-
 
             String getThumbnailText = (String) alarm.getVideoName();
             //String getThumb = alarm.getSnippet().getThumbnails().getMedium().getUrl();
@@ -103,7 +98,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     });
 
-             enableButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            enableButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     MyDebug.log("enable Button Click !! ");
@@ -112,13 +107,14 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         //isActiva = "0";
                         Toast.makeText(context, " false => true", Toast.LENGTH_SHORT).show();
                         MyDebug.log("ACTION_DOWN: getAlarmId + " + getAlarmId);
+                        //fragment.updateEnable(getAlarmId);
+                        //enableButton.setChecked(true);
                         VideoAlarmManagerUtil.getInstance().UpdateAlarmEnable(getAlarmId);
                         enableButton.setChecked(true);
                     } else {
                         // isActiva = "1";
                         Toast.makeText(context, " true => false ", Toast.LENGTH_SHORT).show();
                         MyDebug.log("ACTION_UP: getAlarmId + " + getAlarmId );
-                        //fragment.updateEnable(getAlarmId);
                         VideoAlarmManagerUtil.getInstance().UpdateAlarmEnable(getAlarmId);
                         Log.d("ontouchEvent", "enableid.isChecked() : " + enableButton.isChecked());
                         enableButton.setChecked(false);
@@ -154,6 +150,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.row_item_home, parent, false);
+        MyDebug.log("AdapterHome : onCreateViewHolder.");
         return new HomeHolder(view);
     }
 
@@ -161,6 +158,7 @@ public class AdapterHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Alarm alarm = alarmList.get(position);
         HomeHolder hh = (HomeHolder) holder;
+        MyDebug.log("AdapterHome : 여기도 들어옴.");
         hh.setData(alarm);
     }
 

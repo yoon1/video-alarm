@@ -55,6 +55,7 @@ public class AdapterSearch extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         public void setData(VideoYoutube data) {
+            MyDebug.log("AdapterSearch setData.");
             final String getTitle = data.getSnippet().getTitle();
             String getThumb = data.getSnippet().getThumbnails().getMedium().getUrl();
             final String getVideoId = data.getId().getVideoId();

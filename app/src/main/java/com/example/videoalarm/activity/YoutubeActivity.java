@@ -35,7 +35,9 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
 
         Resources res = getResources();
         API_KEY = res.getString(R.string.api_key);
+        MyDebug.log("### YoutubeActivity!! api_key = " + API_KEY);
         PLAYLIST_ID = res.getString(R.string.playlist_id);
+        MyDebug.log("### YoutubeActivity!! playlist_id = " + PLAYLIST_ID);
         //Video_ID ="T8p7wQJ8Lu4";
 
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtubeView);
@@ -46,14 +48,20 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     protected void onNewIntent(Intent intent) {
-        processCommand(passedIntent);
+        MyDebug.log("### YoutubeActivity!! onNewIntent" );
+        processCommand(passedIntent); // intent받아오기.
         super.onNewIntent(intent);
     }
 
     private void processCommand(Intent intent) {
+        MyDebug.log("processCommand.");
         if (intent != null ) {
             String id = intent.getStringExtra("id");
-            Toast.makeText(this, "서비습로부터 전달받은 데이터 : " + id , Toast.LENGTH_LONG).show();
+            String videoId = intent.getStringExtra("videoId");
+            MyDebug.log("### YoutubeActivity ID : " + id);
+            MyDebug.log("### YoutubeActivity VIDEO ID : " + videoId);
+            VIDEO_ID = videoId;
+            MyDebug.log("videoID setting 완료 : "+ VIDEO_ID);
         }
     }
     //--------------------------------------------------------------------------------------------//
@@ -74,9 +82,9 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
+        MyDebug.log("### YoutubeActivity!! onInitializationSuccess " );
         player.setPlayerStateChangeListener(playerStateChangeListener);
         player.setPlaybackEventListener(playbackEventListener);
-
         /* start buffering */
         if(!wasRestored) {
             //player.cuePlaylist(PlayList_ID);

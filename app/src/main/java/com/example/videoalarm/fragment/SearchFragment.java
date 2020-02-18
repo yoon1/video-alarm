@@ -98,18 +98,22 @@ public class SearchFragment extends Fragment {
     }
 
     private void getJson(String query) {
-        String url = YoutubeAPI.BASE_URL + YoutubeAPI.srch + YoutubeAPI.KEY +
+        MyDebug.log("getJson");
+        String url = YoutubeAPI.BASE_URL + YoutubeAPI.srch + YoutubeAPI.getKey((MainActivity)getActivity())+
                 YoutubeAPI.maxResults + YoutubeAPI.part + YoutubeAPI.order + YoutubeAPI.query + query + YoutubeAPI.type;
+        MyDebug.log("RETURN : "+ url);
         Call<ModelVideolist> data = YoutubeAPI.getSearchVideo().getYoutube(url);
 
         data.enqueue(new Callback<ModelVideolist>() {
             @Override
             public void onResponse(Call<ModelVideolist> call, Response<ModelVideolist> response) {
                 if( response.errorBody() != null) {
-                    Log.w(TAG, "onResponse search : " + response.errorBody().toString() );
+                    MyDebug.log("onResponse search : " + response.errorBody().toString() );
                 } else {
+                    MyDebug.log("onReponse not error");
                     ModelVideolist mv = response.body();
                     if( mv.getItems().size() != 0) {
+                        MyDebug.log("adapter");
                         videoList.clear(); // reload
                         videoList.addAll(mv.getItems());
                         adapter.notifyDataSetChanged();;

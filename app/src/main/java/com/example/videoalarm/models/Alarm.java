@@ -101,4 +101,29 @@ public class Alarm {
     }
 
     public void setVideoName(String videoName) {    this.videoName = videoName;    }
+
+    public int getAlarmTimeHour() {
+        int hour = 0;
+        if ( alarmTime != null) {
+            hour = Integer.parseInt(alarmTime.substring(0, 2));
+        }
+        return hour;
+    }
+
+    public int getAlarmTimeMin() {
+        int min = 0;
+        if ( alarmTime != null) {
+            min  = Integer.parseInt(alarmTime.substring(2, 4));
+        }
+        return min;
+    }
+
+    public int getAlarmTimeSec() {
+        int sec = 0;
+        if ( alarmTime != null) {
+            sec = Integer.parseInt(alarmTime.substring(4));
+        }
+        return sec;
+    }
+
 }

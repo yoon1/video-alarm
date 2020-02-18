@@ -69,6 +69,8 @@ public class HomeAddFragment extends Fragment{
         txt_time = view.findViewById(R.id.timeText);
         txt_date = view.findViewById(R.id.dateText);
 
+        MyDebug.log("HomeAddFragment 진입 !! ");
+
         //getThumb = "https://img.youtube.com/vi/" + (String) alarm.getVideoId() + "/" + "hqdefault.jpg" ;
         if (getArguments() != null) {
             MyDebug.log("Argument존재.");
@@ -112,6 +114,7 @@ public class HomeAddFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 // 수정 필요 :: 수정하러 들어가게 해주세요.
+                MyDebug.log("setThumbnail Click!! ");
                 setYoutubeVideo();
             }
         });
@@ -165,7 +168,7 @@ public class HomeAddFragment extends Fragment{
         // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Alarm alarm = new Alarm();
-        alarm = getAlarm();
+        alarm = getCurrentAlarm();
 
         MyDebug.log("ALARMID " +  alarmId);
         MyDebug.log("UPDATE ID : " +  alarm.getId());
@@ -179,12 +182,16 @@ public class HomeAddFragment extends Fragment{
         if ( getArguments().getString("alarmId") != null && !getArguments().getString("alarmId").isEmpty()) {
             // DB : update(alarm);
             VideoAlarmManagerUtil.getInstance().UpdateAlarm(alarm);
+            ((MainActivity)getActivity()).unRegisterAlarm(alarm.getId());
+            ((MainActivity)getActivity()).registerAlarm(alarm);
             MyDebug.log("# UPDATE : HOMEADDFRAGMENT ");
         } else {
             // DB : insert(alarm);
-            VideoAlarmManagerUtil.getInstance().AddAlarm(alarm);
+            int result = (int) VideoAlarmManagerUtil.getInstance().AddAlarm(alarm);
+            alarm.setId(result);
+            ((MainActivity)getActivity()).registerAlarm(alarm);
+            //VideoAlarmManagerUtil.getInstance().registerAlarm((), alarm);
             MyDebug.log("# INSERT : HOMEADDFRAGMENT ");
-            //onDestroyView();
         }
         ((MainActivity)getActivity()).setFragment(null, HomeFragment.newInstance());
 
@@ -207,8 +214,9 @@ public class HomeAddFragment extends Fragment{
                 Bundle
          ******************  */
         /* 선택하면 video Id를 반환할 예정 */
+        MyDebug.log("setYoutubeVideo !! ");
         Bundle bundle = new Bundle();
-        Alarm alarm = getAlarm();
+        Alarm alarm = getCurrentAlarm();
         try {
             if ( alarm.getAlarmDate()!= null && !alarm.getAlarmDate().isEmpty() )
                 bundle.putString("alarmDate", alarm.getAlarmDate());
@@ -241,24 +249,9 @@ public class HomeAddFragment extends Fragment{
     }
 
     //--------------------------------------------------------------------------------------------//
-    // DB : insert Alarm
-    //--------------------------------------------------------------------------------------------//
-/*   private void insert(Alarm alarm) {
-        SqlLiteUtil.getInstance().insert(alarm);
-    }
- */
-
-    //--------------------------------------------------------------------------------------------//
-    // DB : update Alarm
-    //--------------------------------------------------------------------------------------------//
-/*     private void update(Alarm alarm) {
-        SqlLiteUtil.getInstance().update(alarm);
-    }
- */
-    //--------------------------------------------------------------------------------------------//
     // setting된 Alarm 반환 - 이부분은 다시 고쳐야됌.
     //--------------------------------------------------------------------------------------------//
-    private Alarm getAlarm() {
+    private Alarm getCurrentAlarm() {
         Alarm alarm = new Alarm();
         if (alarmId != null && alarmId.isEmpty())
             alarm.setId(Integer.parseInt(alarmId));

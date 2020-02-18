@@ -24,11 +24,19 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-
-        //String id = intent.getExtras().getString("id");
-        //Intent notificationIntent = new Intent(context, YoutubeActivity.class);
+        MyDebug.log("IM ALARM RECEIVER");
         Intent notificationIntent = new Intent(context, VideoPlayingService.class);
-        //notificationIntent.putExtra().getString("id");
+        String id = intent.getStringExtra("id");
+        String state = intent.getExtras().getString("state");
+
+        String videoId= intent.getStringExtra("videoId");
+
+        MyDebug.log("IM ALARM RECEIVER ID : " + id);
+        MyDebug.log("IM ALARM RECEIVER VIDEO ID : " + videoId);
+
+        notificationIntent.putExtra("id", id );
+        notificationIntent.putExtra("videoId", videoId);
+        notificationIntent.putExtra("state", state);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addParentStack(YoutubeActivity.class);
@@ -53,10 +61,10 @@ public class AlarmReceiver extends BroadcastReceiver {
                     "NotificationDemo",
                     IMPORTANCE_DEFAULT
             );
-            //notificationManager.createNotificationChannel(channel);
+            notificationManager.createNotificationChannel(channel);
             this.context.startForegroundService(notificationIntent);
         }
-        //notificationManager.notify(0, notification);
+        notificationManager.notify(0, notification);
         this.context.startService(notificationIntent);
 
     }

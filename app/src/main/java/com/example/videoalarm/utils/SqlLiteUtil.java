@@ -52,11 +52,10 @@ public class SqlLiteUtil {
             MyDebug.log(tableName + " == > CAN'T OPEN DATABASE ");
         }
     }
-
     //--------------------------------------------------------------------------------------------//
     // Alarm insert
     //--------------------------------------------------------------------------------------------//
-    public void insert(Alarm alarm) {
+    public long insert(Alarm alarm) {
         ContentValues values = new ContentValues();
         // 키,값의 쌍으로 데이터 입력
         if(tableName.equals(Defines.ALARM)) {
@@ -77,6 +76,7 @@ public class SqlLiteUtil {
             e.printStackTrace();
             MyDebug.log(tableName+" : " + result + "_ row insert FAILURE.");
         }
+        return result;
     }
 
     //--------------------------------------------------------------------------------------------//

@@ -11,10 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <service
             android:name=".utils.VideoPlayingService"
             android:enabled="true"
             android:exported="true"></service>
+        <receiver
+            android:name=".utils.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>
@@ -24,8 +29,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.YoutubeActivity"></activity> <!-- Declare  Alarm Broadcast receiver here -->
-        <!-- <activity android:name=".view.NotificationActivity" /> -->
-        <receiver android:name=".utils.AlarmReceiver" />
     </application>
 
 </manifest>

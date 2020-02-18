@@ -18,7 +18,6 @@ import com.example.videoalarm.utils.SqlLiteUtil;
 import com.example.videoalarm.utils.SwipeController;
 import com.example.videoalarm.utils.SwipeControllerActions;
 import com.example.videoalarm.utils.VideoAlarmManagerUtil;
-import com.example.videoalarm.utils.VideoPlayingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,6 @@ public class HomeFragment extends Fragment {
     private Button btn_add;
     private RecyclerView recyclerView;
     private TextView listnullText;
-    private FragmentManager fragmentManager;
 
     private String videoId;
 
@@ -49,10 +47,12 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        videoAlarmManager = VideoAlarmManagerUtil.getInstance();
         btn_add = view.findViewById(R.id.addButton);
         recyclerView = view.findViewById(R.id.recyclerView);
         listnullText = view.findViewById(R.id.listnullText);
+        MyDebug.log("Home Fragment 진입.");
+        videoAlarmManager = VideoAlarmManagerUtil.getInstance();
+
 
         // 알람 리스트 사이즈가 0일 때.
         if(!VideoAlarmManagerUtil.getInstance().SetAlarmList()) {
@@ -83,12 +83,15 @@ public class HomeFragment extends Fragment {
                 MyDebug.log("-------------------------------");
             }
 
+            MyDebug.log("##AdapterHome진입. ");
             adapter = new AdapterHome(getContext(), alarmList, this);
+            MyDebug.log("##AdapterHome나옴.ㅋ");
 
             manager = new LinearLayoutManager(getContext());
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(manager);
 
+            MyDebug.log("##SWIFE CONTROLLER.ㅋ");
             swipeController = new SwipeController(new SwipeControllerActions() {
                 @Override
                 public void onLeftClicked(int position) {
@@ -107,13 +110,16 @@ public class HomeFragment extends Fragment {
                     } else {
                         MyDebug.log("position : " + position);
                         MyDebug.log("alarmLIst position : : " + alarmList.get(position));
-                        deleteButton(alarmList.get(position));
-                        alarmList.remove(position);
+                        Alarm tAlarm = alarmList.get(position);
+                        deleteButton(tAlarm);
+                        //alarmList.remove(position);
+                        ((MainActivity)getActivity()).unRegisterAlarm(tAlarm.getId());
                         recyclerView.getAdapter().notifyItemRemoved(position);
                     }
                 }
             });
 
+            MyDebug.log("##ITEM TOUCH.ㅋ");
             ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
             itemTouchhelper.attachToRecyclerView(recyclerView);
 
@@ -126,10 +132,11 @@ public class HomeFragment extends Fragment {
         }
 
         // 추가 버튼 클릭.
+        MyDebug.log("## insertButton Click.ㅋ");
         btn_add .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveButton();
+                insertButton();
             }
         });
         return view;
@@ -138,8 +145,8 @@ public class HomeFragment extends Fragment {
     //--------------------------------------------------------------------------------------------//
     // 알람 저장 : 예외 처리 필요
     //--------------------------------------------------------------------------------------------//
-    public void saveButton() {
-        MyDebug.log("# HomeFragment : saveButton # ");
+    public void insertButton() {
+        MyDebug.log("# HomeFragment : insertButton # ");
         ((MainActivity)getActivity()).setFragment(null, HomeAddFragment.newInstance());
     }
 
@@ -178,7 +185,15 @@ public class HomeFragment extends Fragment {
         MyDebug.log("전달 getAlarmNote : " +  alarm.getAlarmNote());
         MyDebug.log("전달 getVideoId : " +  alarm.getVideoId());
         MyDebug.log("======DELETE END ======");
-        //DB : SqlLiteUtil.getInstance().delete(alarm.getId());
-        VideoAlarmManagerUtil.getInstance().DeleteAlarm(alarm.getId());
+        //SqlLiteUtil.getInstance().delete(alarm.getId());
+        videoAlarmManager.DeleteAlarm(alarm.getId());
+
     }
+
+    //--------------------------------------------------------------------------------------------//
+    // DB : update enable
+    //--------------------------------------------------------------------------------------------//
+    /* public void updateEnable(int alarmId) {
+        SqlLiteUtil.getInstance().updateEnable(alarmId);
+    } */
 }
