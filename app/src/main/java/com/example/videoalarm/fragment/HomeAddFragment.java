@@ -229,7 +229,6 @@ public class HomeAddFragment extends Fragment {
     private void setAlarmData() {
         if (getArguments().getString("id") != null && !getArguments().getString("id").isEmpty()) {
             id = getArguments().getString("id");
-            MyDebug.log("HOME ADD FRAGMENT 에서 BUNDEL로 넘겨받은 값이 무엇인가 ? : " + id);
         }
         if (getArguments().getString("alarmDate") != null && !getArguments().getString("alarmDate").isEmpty()) {
             txt_date.setText(getFormatDate(getArguments().getString("alarmDate")));
