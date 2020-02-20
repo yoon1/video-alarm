@@ -1,8 +1,5 @@
-
 package com.example.videoalarm.fragment;
 
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,53 +9,50 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.videoalarm.R;
 import com.example.videoalarm.activity.MainActivity;
 import com.example.videoalarm.dialog.DateDialogFragment;
 import com.example.videoalarm.dialog.TimeDialogFragment;
 import com.example.videoalarm.models.Alarm;
 import com.example.videoalarm.utils.MyDebug;
-import com.example.videoalarm.utils.SqlLiteUtil;
 import com.example.videoalarm.utils.VideoAlarmManagerUtil;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.ListFragment;
-import retrofit2.Call;
-import retrofit2.Response;
-
 import static android.content.ContentValues.TAG;
 
-public class HomeAddFragment extends Fragment{
+public class HomeAddFragment extends Fragment {
     private View view_date;
     private View view_time;
+
     private Button btn_save;
     private Button btn_cancle;
     private ImageView iv_home_thumbnail;
     private TextView txt_date;
     private TextView txt_time;
     private EditText txt_content;
-    private String getThumb;
-    private FragmentManager fragmentManager;
 
-    private String alarmId;
+    private TextView txt_time_temp;
+    private TextView txt_date_temp;
+
+    private String getThumb;
+    private String id;
     private String videoId;
-    private String alarmDate;
-    private String alarmTime;
-    private String alarmNote;
     private String videoName;
 
+    int year;
+    int day;
+    int month;
+    int hour;
+    int minute;
+
     public static HomeAddFragment newInstance() {
-        return new HomeAddFragment ();
+        return new HomeAddFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_add_alarm, container, false);
         view_date = view.findViewById(R.id.dateView);
         view_time = view.findViewById(R.id.timeView);
@@ -66,21 +60,23 @@ public class HomeAddFragment extends Fragment{
         btn_cancle = view.findViewById(R.id.cancleButton);
         iv_home_thumbnail = view.findViewById(R.id.iv_home_add_thumb);
         txt_content = view.findViewById(R.id.contentText);
-        txt_time = view.findViewById(R.id.timeText);
         txt_date = view.findViewById(R.id.dateText);
+        txt_time = view.findViewById(R.id.timeText);
 
-        MyDebug.log("HomeAddFragment 진입 !! ");
+        txt_date_temp = view.findViewById(R.id.dateTxt_temp);
+        txt_time_temp = view.findViewById(R.id.timeTxt_temp);
 
-        //getThumb = "https://img.youtube.com/vi/" + (String) alarm.getVideoId() + "/" + "hqdefault.jpg" ;
+        txt_date_temp.setVisibility(View.INVISIBLE);
+        txt_time_temp.setVisibility(View.INVISIBLE);
+
         if (getArguments() != null) {
-            MyDebug.log("Argument존재.");
+            MyDebug.log("SET ALARM DATE!");
             setAlarmData();
+        } else {
+            MyDebug.log("Argument is null");
         }
-        MyDebug.log("Argument존재안함.");
 
-        getThumb = "https://img.youtube.com/vi/" + videoId + "/" + "hqdefault.jpg" ;
-        MyDebug.log("GETTHUMB LOG : " + getThumb);
-
+        getThumb = "https://img.youtube.com/vi/" + videoId + "/" + "hqdefault.jpg";
         /* *******************
             Button Action
          ******************  */
@@ -104,7 +100,7 @@ public class HomeAddFragment extends Fragment{
                 saveButton();
             }
         });
-        btn_cancle.setOnClickListener(new View.OnClickListener(){
+        btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancleButton();
@@ -113,17 +109,15 @@ public class HomeAddFragment extends Fragment{
         iv_home_thumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 수정 필요 :: 수정하러 들어가게 해주세요.
-                MyDebug.log("setThumbnail Click!! ");
                 setYoutubeVideo();
             }
         });
         Picasso.get()
                 .load(getThumb)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.default_video)
                 .fit()
                 .centerCrop()
-                .into(iv_home_thumbnail, new Callback() { // 기본 이미지
+                .into(iv_home_thumbnail, new Callback() {
                     @Override
                     public void onSuccess() {
                         Log.d(TAG, "Thumbnail success");
@@ -134,11 +128,8 @@ public class HomeAddFragment extends Fragment{
                         Log.d(TAG, "Thumbnail error");
                     }
                 });
-
         return view;
     }
-
-    // @Override public void onDestroyView() { super.onDestroyView(); }
 
     //--------------------------------------------------------------------------------------------//
     // 날짜 설정
@@ -160,41 +151,18 @@ public class HomeAddFragment extends Fragment{
     // 알람 저장 : 예외 처리 필요
     //--------------------------------------------------------------------------------------------//
     public void saveButton() {
-        //Toast.makeText(getContext(), "You need to enter some text", Toast.LENGTH_SHORT).show();
-        MyDebug.log("saveButton!");
-        /* 1. transaction 처리 */
-
-        // Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        // intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
         Alarm alarm = new Alarm();
         alarm = getCurrentAlarm();
-
-        MyDebug.log("ALARMID " +  alarmId);
-        MyDebug.log("UPDATE ID : " +  alarm.getId());
-        MyDebug.log("UPDATE DATE : " +  alarm.getAlarmDate());
-        MyDebug.log("UPDATE TIEM : " +  alarm.getAlarmTime());
-        MyDebug.log("UPDATE NOTE : " +  alarm.getAlarmNote());
-        MyDebug.log("UPDATE VIDEOID: " +  alarm.getVideoId());
-        MyDebug.log("UPDATE VIODEO NAME: " +  alarm.getVideoName());
-
-        //alarm.setAlarmNote("ok?");
-        if ( getArguments().getString("alarmId") != null && !getArguments().getString("alarmId").isEmpty()) {
-            // DB : update(alarm);
+        if (getArguments().getString("id") != null && !getArguments().getString("id").isEmpty()) {
             VideoAlarmManagerUtil.getInstance().UpdateAlarm(alarm);
-            ((MainActivity)getActivity()).unRegisterAlarm(alarm.getId());
-            ((MainActivity)getActivity()).registerAlarm(alarm);
-            MyDebug.log("# UPDATE : HOMEADDFRAGMENT ");
+            ((MainActivity) getActivity()).unRegisterAlarm(alarm.getId());
+            ((MainActivity) getActivity()).registerAlarm(alarm);
         } else {
-            // DB : insert(alarm);
             int result = (int) VideoAlarmManagerUtil.getInstance().AddAlarm(alarm);
             alarm.setId(result);
-            ((MainActivity)getActivity()).registerAlarm(alarm);
-            //VideoAlarmManagerUtil.getInstance().registerAlarm((), alarm);
-            MyDebug.log("# INSERT : HOMEADDFRAGMENT ");
+            ((MainActivity) getActivity()).registerAlarm(alarm);
         }
-        ((MainActivity)getActivity()).setFragment(null, HomeFragment.newInstance());
-
+        ((MainActivity) getActivity()).setFragment(null, HomeFragment.newInstance());
     }
 
     //--------------------------------------------------------------------------------------------//
@@ -202,7 +170,7 @@ public class HomeAddFragment extends Fragment{
     //--------------------------------------------------------------------------------------------//
     public void cancleButton() {
         /* 2. 되돌아가기 */
-        ((MainActivity)getActivity()).setFragment(null, HomeFragment.newInstance());
+        ((MainActivity) getActivity()).setFragment(null, HomeFragment.newInstance());
         //onDestroyView();
     }
 
@@ -213,87 +181,104 @@ public class HomeAddFragment extends Fragment{
         /* *******************
                 Bundle
          ******************  */
-        /* 선택하면 video Id를 반환할 예정 */
-        MyDebug.log("setYoutubeVideo !! ");
         Bundle bundle = new Bundle();
         Alarm alarm = getCurrentAlarm();
         try {
-            if ( alarm.getAlarmDate()!= null && !alarm.getAlarmDate().isEmpty() )
+            if (alarm.getAlarmDate() != null && !alarm.getAlarmDate().isEmpty())
                 bundle.putString("alarmDate", alarm.getAlarmDate());
-            if ( alarm.getAlarmTime() != null && !alarm.getAlarmTime().isEmpty() )
+            if (alarm.getAlarmTime() != null && !alarm.getAlarmTime().isEmpty())
                 bundle.putString("alarmTime", alarm.getAlarmTime());
-            if ( alarm.getAlarmNote()!= null && !alarm.getAlarmNote().isEmpty() )
+            if (alarm.getAlarmNote() != null && !alarm.getAlarmNote().isEmpty())
                 bundle.putString("alarmNote", alarm.getAlarmNote());
-            if ( alarm.getVideoId() != null && !alarm.getVideoId().isEmpty() )
+            if (alarm.getVideoId() != null && !alarm.getVideoId().isEmpty())
                 bundle.putString("videoId", videoId);
-            if ( alarm.getVideoName() != null && !alarm.getVideoName().isEmpty() )
+            if (alarm.getVideoName() != null && !alarm.getVideoName().isEmpty())
                 bundle.putString("videoName", videoName);
-            if (getArguments().getString("alarmId") != null && !getArguments().getString("alarmId").isEmpty())
-                bundle.putString("alarmId", getArguments().getString("alarmId"));
-        } catch(NullPointerException e) {
+            if (getArguments().getString("id") != null && !getArguments().getString("id").isEmpty())
+                bundle.putString("id", getArguments().getString("id"));
+        } catch (NullPointerException e) {
             MyDebug.log("NULL ERROR : ", e.toString());
         }
-        /* videoId, Name도 null처리 해야되는데 쫌따하자. */
-        MyDebug.log("HomeAddFragment시작시작=====>>> ");
-        MyDebug.log("AlarmDate "+ alarm.getAlarmDate());
-        MyDebug.log("AlarmTime "+ alarm.getAlarmTime());
-        MyDebug.log("AlarmNote"+ alarm.getAlarmNote());
-        MyDebug.log("VideoId "+ alarm.getVideoId());
-        MyDebug.log("VideoName"+ alarm.getVideoName());
-        MyDebug.log("AlarmId "+ alarm.getId());
-        MyDebug.log("HomeAddFragment종료종료=====>>> ");
-        /*  DATA 전달 */
-
-        SearchFragment searchFragment  = new SearchFragment();
-        ((MainActivity)getActivity()).setFragment(bundle, searchFragment.newInstance());
+        SearchFragment searchFragment = new SearchFragment();
+        ((MainActivity) getActivity()).setFragment(bundle, searchFragment.newInstance());
     }
 
     //--------------------------------------------------------------------------------------------//
-    // setting된 Alarm 반환 - 이부분은 다시 고쳐야됌.
+    // setting된 Alarm 반환
     //--------------------------------------------------------------------------------------------//
     private Alarm getCurrentAlarm() {
         Alarm alarm = new Alarm();
-        if (alarmId != null && alarmId.isEmpty())
-            alarm.setId(Integer.parseInt(alarmId));
+        if (id != null && !id.isEmpty() && id != "-1") {
+            MyDebug.log("GET CURRENT ALARM : " + id);
+            alarm.setId(Integer.parseInt(id));
+        }
         alarm.setEnable(true);
-        alarm.setAlarmDate(txt_date.getText().toString());
-        alarm.setAlarmTime(txt_time.getText().toString());
+        alarm.setAlarmDate(txt_date_temp.getText().toString());
+        alarm.setAlarmTime(txt_time_temp.getText().toString());
         alarm.setAlarmNote(txt_content.getText().toString());
         alarm.setVideoId(videoId);
         alarm.setVideoName(videoName);
+        MyDebug.log("getCurrentAlarm");
+        alarm.printAlarm();
         return alarm;
     }
 
     //--------------------------------------------------------------------------------------------//
-    // DB : setAlarmDate!! >.<  ++ TODO : 초기값 설정.
+    // DB : 조회한 Alarm 데이터 setting
     //--------------------------------------------------------------------------------------------//
-    private void setAlarmData(){
-        MyDebug.log("---------번들 출력----------");
-        if ( getArguments().getString("alarmId") != null && !getArguments().getString("alarmId").isEmpty()) {
-            MyDebug.log("alarmId : " + getArguments().getString("alarmId"));
-            alarmId = getArguments().getString("alarmId");
+    private void setAlarmData() {
+        if (getArguments().getString("id") != null && !getArguments().getString("id").isEmpty()) {
+            id = getArguments().getString("id");
+            MyDebug.log("HOME ADD FRAGMENT 에서 BUNDEL로 넘겨받은 값이 무엇인가 ? : " + id);
         }
-        if ( getArguments().getString("alarmDate") != null && !getArguments().getString("alarmDate").isEmpty()) {
-            MyDebug.log("alarmDate : " + getArguments().getString("alarmDate"));
-            txt_date.setText(getArguments().getString("alarmDate"));
+        if (getArguments().getString("alarmDate") != null && !getArguments().getString("alarmDate").isEmpty()) {
+            txt_date.setText(getFormatDate(getArguments().getString("alarmDate")));
+            txt_date_temp.setText(getArguments().getString("alarmDate"));
         }
-        if ( getArguments().getString("alarmTime") != null && !getArguments().getString("alarmTime").isEmpty()) {
-            MyDebug.log("alarmTime : " + getArguments().getString("alarmTime"));
-            txt_time.setText(getArguments().getString("alarmTime"));
+        if (getArguments().getString("alarmTime") != null && !getArguments().getString("alarmTime").isEmpty()) {
+            txt_time.setText(getFormatTime(getArguments().getString("alarmTime")));
+            txt_time_temp.setText(getArguments().getString("alarmTime"));
         }
-        if ( getArguments().getString("alarmNote") != null && !getArguments().getString("alarmNote").isEmpty()) {
-            MyDebug.log("alarmNote : " + getArguments().getString("alarmNote"));
+        if (getArguments().getString("alarmNote") != null && !getArguments().getString("alarmNote").isEmpty()) {
             txt_content.setText(getArguments().getString("alarmNote"));
         }
-        if ( getArguments().getString("videoId") != null && !getArguments().getString("videoId").isEmpty()) {
-            MyDebug.log("videoId : " + getArguments().getString("videoId"));
+        if (getArguments().getString("videoId") != null && !getArguments().getString("videoId").isEmpty()) {
             videoId = getArguments().getString("videoId");
         }
-        if ( getArguments().getString("videoName") != null && !getArguments().getString("videoName").isEmpty()) {
-            MyDebug.log("videoName : " + getArguments().getString("videoName"));
+        if (getArguments().getString("videoName") != null && !getArguments().getString("videoName").isEmpty()) {
             videoName = getArguments().getString("videoName");
         }
-        MyDebug.log("-------------------------------");
     }
 
+    public String getFormatDate(String date) {
+        String date_val = "";
+        try {
+            if (date != null) {
+                date_val = date.substring(0, 4);
+                date_val += "년 ";
+                date_val += date.substring(4, 6);
+                date_val += "월 ";
+                date_val += date.substring(6);
+                date_val += "일";
+            }
+        } catch (IndexOutOfBoundsException e) {
+            MyDebug.log("Exception : " + e);
+        }
+        return date_val;
+    }
+
+    public String getFormatTime(String time) {
+        String time_val = "";
+        try {
+            if (time != null) {
+                time_val = time.substring(0, 2);
+                time_val += "시 ";
+                time_val += time.substring(2, 4);
+                time_val += "분";
+            }
+        } catch (IndexOutOfBoundsException e) {
+            MyDebug.log("Exception : " + e);
+        }
+        return time_val;
+    }
 }

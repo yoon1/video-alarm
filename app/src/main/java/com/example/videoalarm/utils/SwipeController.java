@@ -131,7 +131,6 @@ public class SwipeController extends ItemTouchHelper.Callback {
                         }
                         else if (buttonShowedState == ButtonsState.RIGHT_VISIBLE) {
                             buttonsActions.onRightClicked(viewHolder.getAdapterPosition());
-                            MyDebug.log("# controller #");
                         }
                     }
                     buttonShowedState = ButtonsState.GONE;
@@ -156,12 +155,12 @@ public class SwipeController extends ItemTouchHelper.Callback {
         Paint p = new Paint();
 
         RectF leftButton = new RectF(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + buttonWidthWithoutPadding, itemView.getBottom());
-        p.setColor(Color.BLUE);
+        p.setColor(0xFFFFFF);
         c.drawRoundRect(leftButton, corners, corners, p);
         drawText("EDIT", c, leftButton, p);
 
         RectF rightButton = new RectF(itemView.getRight() - buttonWidthWithoutPadding, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-        p.setColor(Color.RED);
+        p.setColor(0xFFFFFF);
         c.drawRoundRect(rightButton, corners, corners, p);
         drawText("DELETE", c, rightButton, p);
 

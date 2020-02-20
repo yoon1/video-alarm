@@ -38,6 +38,8 @@
 
     <ImageView
         android:id="@+id/iv_home_add_thumb"
+        android:src="@drawable/default_video"
+        android:padding="1dp"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:layout_marginStart="8dp"
@@ -50,7 +52,6 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:srcCompat="@tools:sample/backgrounds/scenic[1]"
         />
 
     <View
@@ -75,8 +76,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="video"
+        android:text="YOUTUBE VIDEO"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/basicFont"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,6 +94,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/basicFont"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView5"
@@ -104,8 +107,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:text="내용"
+        android:text="NOTE"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/basicFont"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
 
@@ -116,8 +120,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:text="시간"
+        android:text="TIME"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/basicFont"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -143,6 +148,7 @@
         android:layout_marginRight="8dp"
         android:enabled="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/basicFont"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/textView4"
@@ -155,8 +161,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:text="날짜"
+        android:text="DATE"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/basicFont"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -166,6 +173,8 @@
         android:layout_height="1dp"
         android:layout_marginTop="10dp"
         android:background="?android:attr/listDivider"
+        android:outlineAmbientShadowColor="@color/color_line"
+        android:outlineSpotShadowColor="@color/color_line"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -181,6 +190,7 @@
         android:layout_marginRight="8dp"
         android:enabled="false"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/basicFont"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -206,20 +216,22 @@
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="@id/divider"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <View
         android:id="@+id/timeView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="410dp"
+        android:layout_height="58dp"
         app:layout_constraintBottom_toBottomOf="@id/divider2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/divider" />
 
     <View
-        android:id="@+id/contnetView"
+        android:id="@+id/contentView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/divider4"
@@ -235,6 +247,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/divider4" />
+
+    <TextView
+        android:id="@+id/dateTxt_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/timeView"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
+
+    <TextView
+        android:id="@+id/timeTxt_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/contentView"
+        app:layout_constraintEnd_toStartOf="@+id/divider2"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

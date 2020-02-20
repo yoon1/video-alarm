@@ -20,48 +20,34 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
     String API_KEY;
     String PLAYLIST_ID;
     String VIDEO_ID;
-    //public final String API_KEY = getString(R.string.api_key);
-    //public final String PlayList_ID = getString(R.string.playlist_id); /* google login 필요 */
-
     Intent passedIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_youtube);
-        MyDebug.log("### YoutubeActivity!!진입!! ###");
         passedIntent = getIntent();
         processCommand(passedIntent);
 
         Resources res = getResources();
         API_KEY = res.getString(R.string.api_key);
-        MyDebug.log("### YoutubeActivity!! api_key = " + API_KEY);
         PLAYLIST_ID = res.getString(R.string.playlist_id);
-        MyDebug.log("### YoutubeActivity!! playlist_id = " + PLAYLIST_ID);
-        //Video_ID ="T8p7wQJ8Lu4";
 
         YouTubePlayerView youTubePlayerView = (YouTubePlayerView) findViewById(R.id.youtubeView);
         youTubePlayerView .initialize(API_KEY, this);
-        Button youtubeButton = (Button)findViewById(R.id.youtubeButton);
-        youtubeButton.setOnClickListener(buttonClick);
    }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        MyDebug.log("### YoutubeActivity!! onNewIntent" );
         processCommand(passedIntent); // intent받아오기.
         super.onNewIntent(intent);
     }
 
     private void processCommand(Intent intent) {
-        MyDebug.log("processCommand.");
         if (intent != null ) {
             String id = intent.getStringExtra("id");
             String videoId = intent.getStringExtra("videoId");
-            MyDebug.log("### YoutubeActivity ID : " + id);
-            MyDebug.log("### YoutubeActivity VIDEO ID : " + videoId);
             VIDEO_ID = videoId;
-            MyDebug.log("videoID setting 완료 : "+ VIDEO_ID);
         }
     }
     //--------------------------------------------------------------------------------------------//
@@ -69,9 +55,7 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
     //--------------------------------------------------------------------------------------------//
     Button.OnClickListener buttonClick = new View.OnClickListener() {
         public void onClick(View v) {
-            //youtubeView.initialize(API_KEY, this); // 아까 사용한 API key를 그대로 사용하면 된다.
             Toast.makeText(YoutubeActivity.this, "여기서 영상보여줄게~", Toast.LENGTH_SHORT).show();
-            MyDebug.log("### YoutubeActivity!!진입!! : 여기서 영상보여줄게~###");
         }
     };
 
@@ -82,12 +66,9 @@ public class YoutubeActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-        MyDebug.log("### YoutubeActivity!! onInitializationSuccess " );
         player.setPlayerStateChangeListener(playerStateChangeListener);
         player.setPlaybackEventListener(playbackEventListener);
-        /* start buffering */
         if(!wasRestored) {
-            //player.cuePlaylist(PlayList_ID);
             player.cueVideo(VIDEO_ID);
         }
     }

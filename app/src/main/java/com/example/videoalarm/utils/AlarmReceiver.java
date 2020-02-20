@@ -27,14 +27,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         MyDebug.log("IM ALARM RECEIVER");
         Intent notificationIntent = new Intent(context, VideoPlayingService.class);
         String id = intent.getStringExtra("id");
-        String state = intent.getExtras().getString("state");
-
         String videoId= intent.getStringExtra("videoId");
+        String alarmNote= intent.getStringExtra("alarmNote");
+        String state = intent.getExtras().getString("state");
 
         MyDebug.log("IM ALARM RECEIVER ID : " + id);
         MyDebug.log("IM ALARM RECEIVER VIDEO ID : " + videoId);
+        MyDebug.log("IM ALARM RECEIVER ALARM NOTE : " + alarmNote);
+        MyDebug.log("IM ALARM RECEIVER STATE : " + state );
 
         notificationIntent.putExtra("id", id );
+        notificationIntent.putExtra("alarmNote", alarmNote);
         notificationIntent.putExtra("videoId", videoId);
         notificationIntent.putExtra("state", state);
 
@@ -43,10 +46,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         stackBuilder.addNextIntent(notificationIntent);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder builder = new Notification.Builder(context);
-        Notification notification = builder.setContentTitle("Demo App Notification")
-                .setContentText("New Notification From Demo App..")
-                .setTicker("New Message Alert!")
-                .setSmallIcon(R.mipmap.ic_launcher)
+        Notification notification = builder.setContentTitle("예약한 비디오가 도착했어요.")
+                .setContentText("NOTE : " + alarmNote)
+                .setTicker("그떄보자 : 예약한 비디오가 도착했어요!!")
+                .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentIntent(pendingIntent).build();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

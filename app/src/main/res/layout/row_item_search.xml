@@ -30,6 +30,7 @@
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:textColor="@color/basicFont"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,14 +41,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_begin="261dp"
-        app:layout_constraintGuide_percent=".7" />
+        app:layout_constraintGuide_percent="0.7007299" />
 
     <View
         android:id="@+id/divider2"
         android:layout_width="409dp"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
+        android:outlineAmbientShadowColor="@color/color_line"
+        android:outlineSpotShadowColor="@color/color_line"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -56,12 +58,17 @@
         android:id="@+id/btn_play"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:text="재생"
+        android:text="PLAY"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textColor="#9955EE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:background="@drawable/overlay_play"
+        android:gravity="center_horizontal|center_vertical"
+    />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

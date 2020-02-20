@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">videoAlarm</string>
+    <!-- string -->
+    <string name="app_name">그때보자</string>
+    <string name="search">SEARCH</string>
     <string name="ok">O</string>
     <string name="cancle">X</string>
+
+    <!-- Customize font color. -->
+    <color name="basicFont">#D9D9D9</color>
+    <color name="color_line">#4399C8</color>
 </resources>

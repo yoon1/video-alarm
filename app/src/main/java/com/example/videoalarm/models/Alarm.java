@@ -3,6 +3,8 @@ package com.example.videoalarm.models;
 // Created by Sim on 2019-09-17.
 // 알람에 필요한 데이터를 객체화 한다
 
+import com.example.videoalarm.utils.MyDebug;
+
 public class Alarm {
     //--------------------------------------------------------------------------------------------//
     //
@@ -125,5 +127,52 @@ public class Alarm {
         }
         return sec;
     }
+
+    public void printAlarm() {
+        MyDebug.log("======printAlarm START ======");
+        MyDebug.log("ID     : " + id);
+        MyDebug.log("enable    : " + enable );
+        MyDebug.log("alarmDate : " + alarmDate);
+        MyDebug.log("alarmTime : " + alarmTime);
+        MyDebug.log("alarmNote : " + alarmNote);
+        MyDebug.log("videoId   : " + videoId );
+        MyDebug.log("videoName : " + videoName);
+        MyDebug.log("======printAlarm END    ======");
+    }
+
+    public String getPrintFormatDate() {
+        String date = "";
+        try {
+            if (alarmDate != null) {
+                printAlarm();
+                date = alarmDate.substring(0, 4);
+                date += "년 ";
+                date += alarmDate.substring(4, 6);
+                date += "월 ";
+                date += alarmDate.substring(6);
+                date += "일";
+            }
+        } catch ( IndexOutOfBoundsException e) {
+            MyDebug.log("Exception : " + e);
+        }
+        return date;
+    }
+
+    public String getPrintFormatTime() {
+        String time = "";
+        try {
+            if (alarmTime != null) {
+                time = alarmTime.substring(0, 2) ;
+                time += "시 ";
+                time += alarmTime.substring(2, 4);
+                time += "분";
+            }
+        } catch ( IndexOutOfBoundsException e) {
+            MyDebug.log( "Exception : " + e) ;
+        }
+        return time ;
+    }
+
+
 
 }

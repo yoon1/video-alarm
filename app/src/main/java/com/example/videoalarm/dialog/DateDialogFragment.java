@@ -8,12 +8,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.DatePicker;
 import android.widget.TextView;
-
 import com.example.videoalarm.R;
 import com.example.videoalarm.utils.MyDebug;
-
 import java.util.Calendar;
-
 import androidx.fragment.app.DialogFragment;
 
 public class DateDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
@@ -25,11 +22,11 @@ public class DateDialogFragment extends DialogFragment implements DatePickerDial
         int month = c.get(Calendar.MONTH);
         int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dpd = new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_DARK,this, year, month, dayOfMonth);
+        DatePickerDialog dpd = new DatePickerDialog(getActivity(), AlertDialog.THEME_HOLO_LIGHT,this, year, month, dayOfMonth);
 
         TextView tvTitle = new TextView(getActivity());
-        tvTitle.setText("DatePickerDialog Title");
-        tvTitle.setBackgroundColor(Color.parseColor("#EEE8AA"));
+        tvTitle.setText("DATE SETTING");
+        tvTitle.setBackgroundColor(Color.parseColor("#8888BB"));
         tvTitle.setPadding(5, 3, 5, 3);
         tvTitle.setGravity(Gravity.CENTER_HORIZONTAL);
         dpd.setCustomTitle(tvTitle);
@@ -40,11 +37,12 @@ public class DateDialogFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         TextView tv = (TextView) getActivity().findViewById(R.id.dateText);
-
+        TextView tv_temp = (TextView) getActivity().findViewById(R.id.dateTxt_temp);
         MyDebug.log("YEAR" + String.valueOf(year));
         MyDebug.log("MONTH" + String.valueOf(month));
         MyDebug.log("DAY" + String.valueOf(dayOfMonth));
-
-        tv.setText(String.format("%04d%02d%02d", year, month + 1, dayOfMonth));
+        tv.setText(String.format("%04d년 %02d월 %02d일", year, month + 1, dayOfMonth));
+        tv_temp.setText(String.format("%04d%02d%02d", year, month + 1, dayOfMonth));
+        MyDebug.log("DATA " + (String) tv_temp.getText());
     }
 }

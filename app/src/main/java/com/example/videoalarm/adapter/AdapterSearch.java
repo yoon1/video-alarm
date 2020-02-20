@@ -1,9 +1,6 @@
 package com.example.videoalarm.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.nfc.Tag;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,30 +8,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.videoalarm.R;
-import com.example.videoalarm.activity.MainActivity;
-import com.example.videoalarm.fragment.HomeAddFragment;
-import com.example.videoalarm.fragment.PlayFragment;
 import com.example.videoalarm.fragment.SearchFragment;
 import com.example.videoalarm.models.Search.VideoYoutube;
-import com.example.videoalarm.utils.MyDebug;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
 import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import static android.content.ContentValues.TAG;
 
 public class AdapterSearch extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<VideoYoutube> videoList;
-
-    Context _context;
     SearchFragment fragment;
 
     public AdapterSearch(Context context, List<VideoYoutube> videoList, SearchFragment fragment) {
@@ -55,7 +41,6 @@ public class AdapterSearch extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         public void setData(VideoYoutube data) {
-            MyDebug.log("AdapterSearch setData.");
             final String getTitle = data.getSnippet().getTitle();
             String getThumb = data.getSnippet().getThumbnails().getMedium().getUrl();
             final String getVideoId = data.getId().getVideoId();
@@ -63,26 +48,19 @@ public class AdapterSearch extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 영상 선택으로 변경할 예정...
-                    //Toast.makeText(context, getTitle, Toast.LENGTH_SHORT).show();
-                    MyDebug.log("나는 어뎁터야");
-                    MyDebug.log("비디오아이디는 : " + getVideoId + " 이름은 " + getVideoName);
                     fragment.selectVideo(getVideoId, getVideoName);
                 }
             });
             btn_play.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //재생
-                    MyDebug.log("VIDEO ID : " + getVideoId + "FRAGEMETN ID : " + fragment.getId());
                     fragment.playVideo(getVideoId);
-                    //Toast.makeText(context, getVideoId, Toast.LENGTH_SHORT).show();
                 }
             });
             title.setText(getTitle);
             Picasso.get()
                     .load(getThumb)
-                    .placeholder(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.default_video)
                     .fit()
                     .centerCrop()
                     .into(thumbnail, new Callback() {

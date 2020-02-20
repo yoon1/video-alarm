@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import com.example.videoalarm.fragment.HomeFragment;
 import com.example.videoalarm.models.Alarm;
 import com.example.videoalarm.models.Defines;
 
@@ -52,6 +53,7 @@ public class SqlLiteUtil {
             MyDebug.log(tableName + " == > CAN'T OPEN DATABASE ");
         }
     }
+
     //--------------------------------------------------------------------------------------------//
     // Alarm insert
     //--------------------------------------------------------------------------------------------//
@@ -95,14 +97,6 @@ public class SqlLiteUtil {
             values.put("videoName", alarm.getVideoName());
             //values.put("videoName", "video");
         }
-
-        MyDebug.log("SQLITE ID : " +  alarm.getId());
-        MyDebug.log("SQLITE DATE : " +  alarm.getAlarmDate());
-        MyDebug.log("SQLITE TIEM : " +  alarm.getAlarmTime());
-        MyDebug.log("SQLITE NOTE : " +  alarm.getAlarmNote());
-        MyDebug.log("SQLITE VIDEOID: " +  alarm.getVideoId());
-        MyDebug.log("SQLITE VIODEO NAME: " +  alarm.getVideoName());
-
         int result = sqLiteDatabase.update(tableName, // tableName
                 values,    // 뭐라고 변경할지 ContentValues 설정
                 "_id=" +id, // 바꿀 항목을 찾을 조건절
@@ -131,7 +125,6 @@ public class SqlLiteUtil {
     //--------------------------------------------------------------------------------------------//
     public ArrayList<Alarm> viewAlarmList() {
         Cursor c = sqLiteDatabase.query(tableName, null, null, null, null, null, null);
-        // sqlLiteDatabase = getReadableDatabase
         ArrayList<Alarm> container = new ArrayList<>();
         try {
             if (c!= null) {
@@ -145,7 +138,6 @@ public class SqlLiteUtil {
                     tAlarm.setVideoId(c.getString(c.getColumnIndex("videoId")));
                     tAlarm.setVideoName(c.getString(c.getColumnIndex("videoName")));
                     container.add(tAlarm);
-                    MyDebug.log(tableName + " : SELECT SUCCESS" );
                 }
             }
         } catch (SQLiteException e) {
@@ -159,7 +151,6 @@ public class SqlLiteUtil {
     // Alarm 반환.
     //--------------------------------------------------------------------------------------------//
     public Alarm selectAlarm (int id) {
-        MyDebug.log("SELECT ENABLE : ");
         Cursor c = sqLiteDatabase.query(tableName, null, "_id=?", new String[]{String.valueOf(id)}, null, null, null);
         // sqlLiteDatabase = getReadableDatabase
         if ( c != null) MyDebug.log("NOT NULL");
@@ -181,17 +172,13 @@ public class SqlLiteUtil {
     // select Enable
     //--------------------------------------------------------------------------------------------//
     public boolean selectEnable (int id) {
-        MyDebug.log("SELECT ENABLE : ");
         Cursor c = sqLiteDatabase.query(tableName, null, "_id=?", new String[]{String.valueOf(id)}, null, null, null);
         // sqlLiteDatabase = getReadableDatabase
         if ( c != null) MyDebug.log("NOT NULL");
         else MyDebug.log("NULL");
         Alarm tAlarm = new Alarm();
         c.moveToFirst();
-        MyDebug.log("VIDEO ID : " + c.getString(c.getColumnIndex("videoId")));
-        MyDebug.log("ENABLE ID : " + (c.getInt(c.getColumnIndex("enable")) == 1));
         tAlarm.setEnable((c.getInt(c.getColumnIndex("enable")) == 1));
-        MyDebug.log("변경전 : " + tAlarm.getEnable());
         return tAlarm.isEnable();
     }
 
@@ -202,6 +189,21 @@ public class SqlLiteUtil {
         ContentValues values = new ContentValues();
         boolean enable = selectEnable(id)?false:true;
         MyDebug.log("변경후 ENABLE : " + enable);
+        values.put("enable", enable);
+        int result = sqLiteDatabase.update(tableName, // tableName
+                values,    // 뭐라고 변경할지 ContentValues 설정
+                "_id=" +id, // 바꿀 항목을 찾을 조건절
+                null);// 바꿀 항목으로 찾을 값 String 배열
+
+        MyDebug.log(tableName + " updateEnable" + result + "번째 row update 성공했음");
+    }
+
+    //--------------------------------------------------------------------------------------------//
+    // set Enable false
+    //--------------------------------------------------------------------------------------------//
+    public void setOffEnable(int id) {
+        ContentValues values = new ContentValues();
+        boolean enable = false;
         values.put("enable", enable);
         int result = sqLiteDatabase.update(tableName, // tableName
                 values,    // 뭐라고 변경할지 ContentValues 설정

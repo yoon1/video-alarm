@@ -9,11 +9,8 @@ import android.text.format.DateFormat;
 import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import com.example.videoalarm.R;
-
 import java.util.Calendar;
-
 import androidx.fragment.app.DialogFragment;
 
 public class TimeDialogFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
@@ -28,8 +25,8 @@ public class TimeDialogFragment extends DialogFragment implements TimePickerDial
                 ,this, hour, minute, DateFormat.is24HourFormat(getActivity()));
 
         TextView tvTitle = new TextView(getActivity());
-        tvTitle.setText("TimePickerDialog Title");
-        tvTitle.setBackgroundColor(Color.parseColor("#EEE8AA"));
+        tvTitle.setText("TIME SETTING");
+        tvTitle.setBackgroundColor(Color.parseColor("#8888BB"));
         tvTitle.setPadding(5, 3, 5, 3);
         tvTitle.setGravity(Gravity.CENTER_HORIZONTAL);
         tpd.setCustomTitle(tvTitle);
@@ -40,6 +37,8 @@ public class TimeDialogFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute){
         TextView tv = (TextView) getActivity().findViewById(R.id.timeText);
-        tv.setText(String.format("%02d%02d", hourOfDay, minute)+"00");
+        TextView tv_temp = (TextView) getActivity().findViewById(R.id.timeTxt_temp);
+        tv.setText(String.format("%02d시 %02d분", hourOfDay, minute));
+        tv_temp.setText(String.format("%02d%02d", hourOfDay, minute)+"00");
     }
 }
